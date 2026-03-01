@@ -10,3 +10,9 @@ __pycache__/
 
 # mac
 .DS_Store
+.env.prod
+.env.prod.db
+.env.*
+__pycache__/
+*.pyc
+.DS_Store

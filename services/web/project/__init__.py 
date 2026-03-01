@@ -1,0 +1,44 @@
+import os
+from flask import Flask, jsonify, request, send_from_directory
+from werkzeug.utils import secure_filename
+
+app = Flask(__name__)
+
+# Create media folder if it doesn't exist
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MEDIA_FOLDER = os.path.join(BASE_DIR, "media")
+os.makedirs(MEDIA_FOLDER, exist_ok=True)
+
+app.config["MEDIA_FOLDER"] = MEDIA_FOLDER
+
+
+@app.route("/")
+def hello_world():
+    return jsonify(hello="world")
+
+
+@app.route("/upload", methods=["POST"])
+def upload_file():
+    if "file" not in request.files:
+        return jsonify(error="No file field named 'file'"), 400
+
+    file = request.files["file"]
+
+    if file.filename == "":
+        return jsonify(error="Empty filename"), 400
+
+    filename = secure_filename(file.filename)
+    save_path = os.path.join(app.config["MEDIA_FOLDER"], filename)
+    file.save(save_path)
+
+    return jsonify(
+        uploaded=filename,
+        url=f"/media/{filename}"
+    )
+
+
+@app.route("/media/<path:filename>")
+def media(filename):
+    return send_from_directory(app.config["MEDIA_FOLDER"], filename)
+
+

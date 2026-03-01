@@ -1,57 +1,51 @@
 import os
-
-from flask import Flask, jsonify, send_from_directory, request
+from flask import Flask, jsonify, request, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 
-app = Flask(__name__)
-app.config.from_object("project.config.Config")
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
+def create_app():
+    app = Flask(__name__)
 
-class User(db.Model):
-    __tablename__ = "users"
+    # DB config
+    from .config import Config
+    app.config.from_object(Config)
+    db.init_app(app)
 
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(128), unique=True, nullable=False)
-    active = db.Column(db.Boolean(), default=True, nullable=False)
+    # Media folder config
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    media_folder = os.path.join(base_dir, "media")
+    os.makedirs(media_folder, exist_ok=True)
+    app.config["MEDIA_FOLDER"] = media_folder
 
-    def __init__(self, email):
-        self.email = email
+    # Import models so SQLAlchemy knows them
+    from .models import User  # noqa: F401
 
+    @app.route("/")
+    def hello_world():
+        return jsonify(hello="world")
 
-@app.route("/")
-def hello_world():
-    return jsonify(hello="world")
-
-
-@app.route("/static/<path:filename>")
-def staticfiles(filename):
-    return send_from_directory(app.config["STATIC_FOLDER"], filename)
-
-
-@app.route("/media/<path:filename>")
-def mediafiles(filename):
-    return send_from_directory(app.config["MEDIA_FOLDER"], filename)
-
-
-@app.route("/upload", methods=["GET", "POST"])
-def upload_file():
-    if request.method == "POST":
+    @app.route("/upload", methods=["POST"])
+    def upload_file():
         if "file" not in request.files:
-            return "No file part", 400
+            return jsonify(error="No file field named 'file'"), 400
+
         file = request.files["file"]
         if file.filename == "":
-            return "No selected file", 400
-        filename = secure_filename(file.filename)
-        os.makedirs(app.config["MEDIA_FOLDER"], exist_ok=True)
-        file.save(os.path.join(app.config["MEDIA_FOLDER"], filename))
-        return jsonify(uploaded=filename)
+            return jsonify(error="Empty filename"), 400
 
-    return """
-    <!doctype html>
-    <title>upload new File</title>
-    <form action="" method=post enctype=multipart/form-data>
-      <p><input type=file name=file><input type=submit value=Upload>
-    </form>
-    """
+        filename = secure_filename(file.filename)
+        save_path = os.path.join(app.config["MEDIA_FOLDER"], filename)
+        file.save(save_path)
+
+        return jsonify(
+            uploaded=filename,
+            url=f"/media/{filename}"
+        )
+
+    @app.route("/media/<path:filename>")
+    def media(filename):
+        return send_from_directory(app.config["MEDIA_FOLDER"], filename)
+
+    return app
