@@ -3,8 +3,8 @@
 # flask-on-docker
 
 ## Overview
-A Dockerized Flask web service using a containerized backend with supporting services.  
-The application allows uploading an image and viewing it via a served media endpoint.
+
+This repository contains a fully containerized Flask web application built using a multi-service architecture inspired by the Instagram-style backend stack. The project uses Docker Compose to orchestrate multiple services, including a Flask web server, a PostgreSQL database, and supporting infrastructure within isolated containers. The application allows users to upload image files and retrieve them through a served media endpoint, demonstrating file handling, persistent storage, and HTTP routing in a web service environment. The purpose of this project is to showcase practical experience with containerized development workflows, service communication, and reproducible deployment setups, ensuring that the application can be built and run consistently across different machines using only Docker.
 
 ## Demo
 (Add demo.gif after recording)
@@ -13,7 +13,7 @@ The application allows uploading an image and viewing it via a served media endp
 
 ## Build / Run Instructions
 
-Start services:
+Start:
 docker compose up -d --build
 
 Open in browser:
