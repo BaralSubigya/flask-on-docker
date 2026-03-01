@@ -5,6 +5,7 @@ from werkzeug.utils import secure_filename
 
 db = SQLAlchemy()
 
+
 def create_app():
     app = Flask(__name__)
 
@@ -26,8 +27,18 @@ def create_app():
     def hello_world():
         return jsonify(hello="world")
 
-    @app.route("/upload", methods=["POST"])
+    @app.route("/upload", methods=["GET", "POST"])
     def upload_file():
+        if request.method == "GET":
+            return """
+            <h2>Upload an image</h2>
+            <form method="POST" enctype="multipart/form-data">
+                <input type="file" name="file" />
+                <button type="submit">Upload</button>
+            </form>
+            """
+
+        # POST
         if "file" not in request.files:
             return jsonify(error="No file field named 'file'"), 400
 
@@ -39,13 +50,19 @@ def create_app():
         save_path = os.path.join(app.config["MEDIA_FOLDER"], filename)
         file.save(save_path)
 
-        return jsonify(
-            uploaded=filename,
-            url=f"/media/{filename}"
-        )
+        return f"""
+        <h3>Upload successful ✅</h3>
+        <p>Filename: {filename}</p>
+        <a href="/media/{filename}">View your image</a>
+        """
 
     @app.route("/media/<path:filename>")
     def media(filename):
         return send_from_directory(app.config["MEDIA_FOLDER"], filename)
 
     return app
+
+
+# This is what `flask run` will look for if you use FLASK_APP=project/__init__.py
+app = create_app()
+
