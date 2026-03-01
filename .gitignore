@@ -1,6 +1,12 @@
+# secrets / env
 .env.prod.db
 .env.prod
-.env.dev
+.env
+*.env
+
+# python
 __pycache__/
 *.pyc
+
+# mac
 .DS_Store
