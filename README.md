@@ -1,6 +1,4 @@
-![Build](https://github.com/BaralSubigya/flask-on-docker/actions/workflows/main.yml/badge.svg)
-
-# Flask on Docker
+# Flask on Docker ![Build](https://github.com/BaralSubigya/flask-on-docker/actions/workflows/main.yml/badge.svg)
 
 A containerized Flask backend demonstrating a simple production-style service using Docker Compose.
 The application allows a user to upload an image and immediately retrieve it through a public URL.
@@ -65,7 +63,7 @@ You should see:
 Go to:
 
 ```
-http://localhost:8123/upload
+http://localhost:8123/upload (replace the number with the number that is unique to your port) 
 ```
 
 Steps:
@@ -82,7 +80,7 @@ Steps:
 After uploading, the page provides a link like:
 
 ```
-http://localhost:8123/media/yourimage.jpg
+http://localhost:8123/media/yourimage.jpg (replace the number with the number that is unique to your port)
 ```
 
 Opening this URL displays the uploaded image directly from the server.
@@ -121,13 +119,6 @@ docker compose up -d --build
 
 ---
 
-## Continuous Integration
-
-This repository uses GitHub Actions to automatically build the containers on every push.
-The build status is shown in the badge at the top of this README.
-
----
-
 ## Demo
 
 The animation below shows:
@@ -137,14 +128,6 @@ The animation below shows:
 3. Viewing the uploaded file
 
 ![Demo](demo.gif)
-
----
-
-## Security Notes
-
-• Production credentials are excluded via `.gitignore`
-• No secrets are committed to the repository
-• Uploaded files persist using Docker volumes
 
 ---
 
