@@ -97,7 +97,7 @@ Opening this URL displays the uploaded image directly from the server.
 
 ---
 
-## Important Commands Only
+## Important Commandss
 
 Start containers:
 
