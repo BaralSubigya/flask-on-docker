@@ -47,7 +47,7 @@ Wait about 5–10 seconds for containers to initialize.
 Open in browser:
 
 ```
-http://localhost:8123
+http://localhost:8123 (NOTE:replace the number with your specific port number)
 ```
 
 You should see:
@@ -63,7 +63,7 @@ You should see:
 Go to:
 
 ```
-http://localhost:8123/upload (replace the number with the number that is unique to your port) 
+http://localhost:8123/upload (NOTE:replace the number with the number that is unique to your port) 
 ```
 
 Steps:
@@ -134,4 +134,5 @@ The animation below shows:
 ## Author
 
 Subigya Baral
+
 
