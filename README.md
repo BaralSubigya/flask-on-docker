@@ -1,29 +1,154 @@
-![CI](https://github.com/BaralSubigya/flask-on-docker/actions/workflows/main.yml/badge.svg)
+![Build](https://github.com/BaralSubigya/flask-on-docker/actions/workflows/main.yml/badge.svg)
 
-# flask-on-docker
+# Flask on Docker
+
+A containerized Flask backend demonstrating a simple production-style service using Docker Compose.
+The application allows a user to upload an image and immediately retrieve it through a public URL.
+
+---
 
 ## Overview
 
-This repository contains a fully containerized Flask web application built using a multi-service architecture inspired by the Instagram-style backend stack. The project uses Docker Compose to orchestrate multiple services, including a Flask web server, a PostgreSQL database, and supporting infrastructure within isolated containers. The application allows users to upload image files and retrieve them through a served media endpoint, demonstrating file handling, persistent storage, and HTTP routing in a web service environment. The purpose of this project is to showcase practical experience with containerized development workflows, service communication, and reproducible deployment setups, ensuring that the application can be built and run consistently across different machines using only Docker.
+This project simulates a minimal real-world backend system. A Flask API runs inside Docker alongside a PostgreSQL container, and uploaded images are stored in a persistent volume and served back to the user.
 
-## Demo
-(Add demo.gif after recording)
+The goal of this repository is to demonstrate:
 
-![demo](demo.gif)
+• Multi-container architecture
+• File uploads and static file serving
+• Persistent storage using Docker volumes
+• Clean separation of development configuration
+• Automatic CI builds via GitHub Actions
 
-## Build / Run Instructions
+After starting the containers, a user can upload an image through the browser and view it using a generated link.
 
-Start:
+---
+
+## How to Run
+
+Clone the repository:
+
+```
+git clone https://github.com/BaralSubigya/flask-on-docker.git
+cd flask-on-docker
+```
+
+Start the application:
+
+```
 docker compose up -d --build
+```
+
+Wait about 5–10 seconds for containers to initialize.
+
+---
+
+## Using the Web App
+
+### 1) Check the server
 
 Open in browser:
+
+```
 http://localhost:8123
+```
 
-Upload example:
-curl -F "file=@/path/to/image.jpg" http://localhost:8123/upload
+You should see:
 
-Then open returned URL:
-http://localhost:8123/media/image.jpg
+```
+{"hello":"world"}
+```
 
-## Security
-Production credentials are excluded using .gitignore.
+---
+
+### 2) Upload an image
+
+Go to:
+
+```
+http://localhost:8123/upload
+```
+
+Steps:
+
+1. Choose any image file
+2. Click **Upload**
+3. A success page appears
+4. Click the generated link
+
+---
+
+### 3) View the uploaded image
+
+After uploading, the page provides a link like:
+
+```
+http://localhost:8123/media/yourimage.jpg
+```
+
+Opening this URL displays the uploaded image directly from the server.
+
+---
+
+## Key Endpoints
+
+| Route               | Purpose               |
+| ------------------- | --------------------- |
+| `/`                 | Health check JSON     |
+| `/upload`           | Upload form           |
+| `/media/<filename>` | Serves uploaded image |
+
+---
+
+## Important Commands Only
+
+Start containers:
+
+```
+docker compose up -d --build
+```
+
+Stop containers:
+
+```
+docker compose down
+```
+
+Rebuild after code changes:
+
+```
+docker compose up -d --build
+```
+
+---
+
+## Continuous Integration
+
+This repository uses GitHub Actions to automatically build the containers on every push.
+The build status is shown in the badge at the top of this README.
+
+---
+
+## Demo
+
+The animation below shows:
+
+1. Starting the containers
+2. Uploading an image
+3. Viewing the uploaded file
+
+![Demo](demo.gif)
+
+---
+
+## Security Notes
+
+• Production credentials are excluded via `.gitignore`
+• No secrets are committed to the repository
+• Uploaded files persist using Docker volumes
+
+---
+
+## Author
+
+Subigya Baral
+
